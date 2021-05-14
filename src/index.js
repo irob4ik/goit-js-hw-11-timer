@@ -1,48 +1,56 @@
 import './styles.css';
 
-// const refs = {
-// }
-
 class CountdownTimer {
   constructor(arg) {
     this.selector = arg.selector;
     this.targetDate = arg.targetDate;
   }
   
-  get refs() {
+  set domRefs({days, hours, mins, secs}) {
     const timer = document.querySelector(this.selector);
-    const refs = {
-      daysField: timer.querySelector('[data-value="days"]'),
-      hoursField: timer.querySelector('[data-value="hours"]'),
-      minsField: timer.querySelector('[data-value="mins"]'),
-      secsField: timer.querySelector('[data-value="secs"]'),
-    }
+    timer.querySelector('[data-value="days"]').textContent = days;
+    timer.querySelector('[data-value="hours"]').textContent = hours;
+    timer.querySelector('[data-value="mins"]').textContent = mins;
+    timer.querySelector('[data-value="secs"]').textContent = secs;
 
-    return refs;
+    return;
   }
   
-  get target() {
+  get targetTime() {
     const time = this.targetDate.getTime() - Date.now();
-    const startTimer = {
-      days: Math.floor(time / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-      mins: Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)),
-      secs: Math.floor((time % (1000 * 60)) / 1000),
-    }
     
-    return startTimer;
+    if (time < 0) {
+      clearInterval(this.intervalId);
+    }
+
+    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+    const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+    
+    return {days, hours, mins, secs};
   }
 
-  startShow() {
-    
-    console.log(this.target);
+  pad(value) {
+    return String(value).padStart(2, '0');
+  };
 
+  startShow() {
+    this.intervalId = setInterval(() => {
+      this.domRefs = this.targetTime;
+    }, 1000);
   }
 };
 
-const letsCountDown = new CountdownTimer({
+const letsCountDownOnce = new CountdownTimer({
   selector: '#timer-1',
   targetDate: new Date('Oct 19, 2021'),
 });
 
-letsCountDown.startShow();
+const letsCountDownTwice = new CountdownTimer({
+  selector: '#timer-2',
+  targetDate: new Date('Jul 17, 2021'),
+});
+
+letsCountDownOnce.startShow();
+letsCountDownTwice.startShow();

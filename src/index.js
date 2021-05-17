@@ -4,14 +4,14 @@ class CountdownTimer {
   constructor(arg) {
     this.selector = arg.selector;
     this.targetDate = arg.targetDate;
+    this.timer = document.querySelector(this.selector);
   }
   
   set domRefs({days, hours, mins, secs}) {
-    const timer = document.querySelector(this.selector);
-    timer.querySelector('[data-value="days"]').textContent = days;
-    timer.querySelector('[data-value="hours"]').textContent = hours;
-    timer.querySelector('[data-value="mins"]').textContent = mins;
-    timer.querySelector('[data-value="secs"]').textContent = secs;
+    this.timer.querySelector('[data-value="days"]').textContent = days;
+    this.timer.querySelector('[data-value="hours"]').textContent = hours;
+    this.timer.querySelector('[data-value="mins"]').textContent = mins;
+    this.timer.querySelector('[data-value="secs"]').textContent = secs;
 
     return;
   }
